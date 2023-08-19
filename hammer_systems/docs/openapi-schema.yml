@@ -1,0 +1,230 @@
+openapi: 3.0.2
+info:
+  title: 'Referral System'
+  description: Документация для приложения ReferralSystem
+  version: v1
+paths:
+  /api/auth/:
+    post:
+      operationId: auth_create
+      description: ''
+      parameters:
+        - name: phone_number
+          required: true
+          in: query
+          description: Номер телефона
+          example: 89962110965 или +79962110965
+          schema:
+            type: string
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+             schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: СМС код - 1234
+                    description: ''
+      tags:
+      - Аутентификация
+    parameters: []
+  /api/verify/:
+    post:
+      operationId: verify_create
+      description: ''
+      parameters:
+        - name: phone_number
+          required: true
+          in: query
+          description: Номер телефона
+          example: 89962110965 или +79962110965
+          schema:
+            type: string
+        - name: auth_code
+          required: true
+          in: query
+          description: Код из СМС
+          example: 1234
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+             schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Авторизация прошла успешно, ваш JWT токен - token
+                    description: ''
+      tags:
+      - Верификация по СМС
+    parameters: []
+  /api/users/:
+    get:
+      operationId: users_list
+      description: ''
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    x-nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    x-nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+          description: 'Список пользователей'
+      tags:
+      - users
+    parameters: []
+  /api/users/me/:
+    get:
+      operationId: users_me
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: ''
+      tags:
+      - users
+    parameters: []
+  /api/users/{invite_code}/invitation/:
+    post:
+      operationId: users_invitation_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: ''
+      tags:
+      - users
+    delete:
+      operationId: users_invitation_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - users
+    parameters:
+    - name: invite_code
+      description: 'Инвайт-код'
+      in: path
+      required: true
+      schema:
+        type: string
+  /api/users/{id}/:
+    get:
+      operationId: users_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: ''
+      tags:
+      - users
+    parameters:
+    - name: id
+      in: path
+      description: Уникальный номер пользователя.
+      required: true
+      schema:
+        type: integer
+components:
+  schemas:
+    ListInvite:
+      required:
+      - phonenumber
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+          example: 1
+        phonenumber:
+          title: Номер телефона
+          type: string
+          example: 89962116578
+          pattern: "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$"
+          maxLength: 12
+          minLength: 1
+    User:
+      required:
+      - phonenumber
+      - invite_code
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+          example: 2
+        phonenumber:
+          title: Номер телефона
+          type: string
+          pattern: "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$"
+          example: 89962110965
+          maxLength: 12
+          minLength: 1
+        invite_code:
+          title: Инвайт-код
+          type: string
+          maxLength: 6
+          minLength: 6
+          example: "l413ds"
+        invitation:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ListInvite"
+          readOnly: true
+  
+  securitySchemes:
+    Token:
+      description: 'Авторизация по токену. <br>
+      Все запросы от имени пользователя должны выполняться с заголовком "Authorization: Bearer TOKENVALUE"'
+      type: http
+      scheme: token
