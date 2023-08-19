@@ -8,8 +8,8 @@
 </div>
 
 # Данные проекта:
-- Проект доступен по [адресу](http://kassschenko.pythonanywhere.com/api/)
-- [Документация API](http://kassschenko.pythonanywhere.com/swagger/)
+- Проект доступен по [адресу](https://kassschenko.pythonanywhere.com/api/)
+- [Документация API](https://kassschenko.pythonanywhere.com/swagger/)
 - Данные для админки
   ```
   login: 89962317857
