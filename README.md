@@ -15,6 +15,7 @@
   login: 89962317857
   password: admin
   ```
+- [Описание задания](https://disk.yandex.ru/i/-t5XQ6cmWkNNxQ)
 # Описание API:
 - **POST api/auth/**: Аутентификация по номеру телефона.
 - **POST api/verify/**: СМС-верификация и получение JWT-токена.
