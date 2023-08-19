@@ -7,6 +7,14 @@
   <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
 </div>
 
+# Данные проекта:
+- Проект доступен по [адресу](http://kassschenko.pythonanywhere.com/api/)
+- [Документация API](http://kassschenko.pythonanywhere.com/swagger/)
+- Данные для админки
+  ```
+  login: 89962317857
+  password: admin
+  ```
 # Описание API:
 - **POST api/auth/**: Аутентификация по номеру телефона.
 - **POST api/verify/**: СМС-верификация и получение JWT-токена.
