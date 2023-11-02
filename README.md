@@ -6,6 +6,12 @@
   <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
 </div>
 
+# Проект доступен по адресу
+[kaschenko.pythonanywhere.com](https://kaschenko.pythonanywhere.com/)
+
+# Документация API
+[kaschenko.pythonanywhere.com/api/docs](https://kaschenko.pythonanywhere.com/api/docs/)
+
 # Запуск проекта:
 - Клонируйте репозиторий и перейдите в него.
 - Перейдите в папку **infra** и проверьте, что файл .env заполнен данными представленными ниже:
