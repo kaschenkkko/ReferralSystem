@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark" style="border: none">
+  <div class="container">
+    <a class="navbar-brand main_name
+      {% if request.resolver_match.view_name  == 'frontend:main' %}
+        active" style="color: #fd9730;
+      {% endif %}"
+      href="{% url 'frontend:main' %}">ReferralSystem
+    </a>
+    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarColor02">
+      <ul class="navbar-nav me-auto">
+        {% with request.resolver_match.view_name as view_name %}
+          <li class="nav-item additional_name">
+            <a class="nav-link
+              {% if view_name  == 'frontend:main' %}
+                active" style="color: #fd9730;
+              {% endif %}"
+              href="{% url 'frontend:main' %}">
+                ReferralSystem
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="contents nav-item">
+              <a class="spacing nav-link
+                {% if view_name  == 'frontend:me' %}
+                  active" style="color: #fd9730;
+                {% endif %}"
+                href="{% url 'frontend:me' %}">
+                  {{  user.phonenumber  }}
+              </a>
+            </li>
+            <li class="contents nav-item">
+              <a class="nav-link" href="{% url 'frontend:logout' %}">
+                Выход
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="contents nav-link
+                {% if view_name  == 'frontend:signup' or view_name == 'frontend:verification' %}
+                  active" style="color: #fd9730;
+                {% endif %}"
+                href="{% url 'frontend:signup' %}">
+                  Войти
+              </a>
+            </li>
+          {% endif %}
+        {% endwith %}
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://www.svgrepo.com/show/356579/sushi-03-nigiri-sake.svg" type="image">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" >
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>{% block title %}Title{% endblock %}</title>
+  </head>
+  <body>
+    <header>
+      {% block header %}
+        <div class="bs-component">
+          {% include 'includes/header.html' %}
+        </div>
+      {% endblock %}
+    </header>
+    <main>
+      {% block content %}
+        mainInfo
+      {% endblock %}
+    </main>
+  </body>
+</html>

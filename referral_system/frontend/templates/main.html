@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load declension %}
+{% block title %}Referral System{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row">
+      {% for user in page_obj %}
+        <div class="col-sm-6">
+          <div class="card mb-3">
+            <h3 class="card-header"
+              {% if request.user.phonenumber  == user.phonenumber %}
+                style="color: #fd9730;
+              {% endif %}">
+              {{  user.phonenumber}}
+            </h3>
+            <div class="card-body">
+              <h5 class="card-title">Инвайт-код: {{  user.invite_code  }}</h5>
+            </div>
+            <div class="accordion-item">
+              <div class="card-body">
+                <h2 class="accordion-header" id="invitation{{ user.id }}">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#invitation_{{ user.id }}" aria-expanded="false" aria-controls="collapse{{ user.id }}"
+                    {% if not user.invitation.all.count %}
+                      disabled="disabled">Приглашений нет
+                    {% else %}
+                      ><span class="invitations">
+                        {{  user.invitation.all.count  }} {{  user.invitation.all.count|declension  }}
+                      </span>
+                    {% endif %}
+                  </button>
+                </h2>
+              </div>
+              <div id="invitation_{{ user.id }}" class="accordion-collapse collapse" aria-labelledby="invitation{{ user.id }}" data-bs-parent="#collapse{{ user.id }}" style="">
+                <div class="accordion-body">
+                  <ul class="list-group list-group-flush">
+                    {% for invite in user.invitation.all %}
+                      <li class="list-group-item">{{  invite  }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div> 
+            <div class="accordion-item">
+              <div class="card-body">
+                <h2 class="accordion-header" id="heading{{ user.id }}">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ user.id }}" aria-expanded="false" aria-controls="collapse{{ user.id }}"
+                    {% if not user.invitations.all.count %}
+                      disabled="disabled">Никого не приглашали
+                    {% else %}
+                      ><span class="invitations">
+                        {{  user.invitations.all.count  }} пригласили
+                      </span>
+                    {% endif %}
+                  </button>
+                </h2>
+              </div>
+              <div id="collapse{{ user.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ user.id }}" data-bs-parent="#collapse{{ user.id }}" style="">
+                <div class="accordion-body">
+                  <ul class="list-group list-group-flush">
+                    {% for invite in user.invitations.all %}
+                      <li class="list-group-item">{{  invite  }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% include 'includes/paginator.html' %}
+  </div>
+{% endblock %}

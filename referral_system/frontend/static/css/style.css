@@ -1,0 +1,27 @@
+@media screen and (min-width: 992px) {
+    .main_name {
+        display: none;
+    }
+    li.nav-item {
+        font-size: 28px;
+        letter-spacing: 0.111em;
+        line-height: 60px
+    }
+}
+@media screen and (max-width: 991px) {
+    li.additional_name { 
+        display: none;
+    }
+}
+a.contents {
+    display: inline-block;
+}
+a.spacing {
+    letter-spacing: 0.68px
+}
+span.invitations {
+    color: #fd9730;
+}
+span.invitations:hover {
+    color: #fff;
+}

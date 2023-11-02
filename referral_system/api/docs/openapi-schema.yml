@@ -36,13 +36,6 @@ paths:
       operationId: verify_create
       description: ''
       parameters:
-        - name: phone_number
-          required: true
-          in: query
-          description: Номер телефона
-          example: 89962110965 или +79962110965
-          schema:
-            type: string
         - name: auth_code
           required: true
           in: query
@@ -91,6 +84,7 @@ paths:
                 properties:
                   count:
                     type: integer
+                    example: 3
                   next:
                     type: string
                     format: uri
@@ -105,9 +99,9 @@ paths:
                       $ref: "#/components/schemas/User"
           description: 'Список пользователей'
       tags:
-      - users
+      - Пользователи
     parameters: []
-  /api/users/me/:
+  /api/user/me/:
     get:
       operationId: users_me
       description: ''
@@ -120,39 +114,9 @@ paths:
                 $ref: "#/components/schemas/User"
           description: ''
       tags:
-      - users
+      - Пользователи
     parameters: []
-  /api/users/{invite_code}/invitation/:
-    post:
-      operationId: users_invitation_create
-      description: ''
-      parameters: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-          description: ''
-      tags:
-      - users
-    delete:
-      operationId: users_invitation_delete
-      description: ''
-      parameters: []
-      responses:
-        '204':
-          description: ''
-      tags:
-      - users
-    parameters:
-    - name: invite_code
-      description: 'Инвайт-код'
-      in: path
-      required: true
-      schema:
-        type: string
-  /api/users/{id}/:
+  /api/user/{id}/:
     get:
       operationId: users_read
       description: ''
@@ -165,7 +129,7 @@ paths:
                 $ref: "#/components/schemas/User"
           description: ''
       tags:
-      - users
+      - Пользователи
     parameters:
     - name: id
       in: path
@@ -173,6 +137,45 @@ paths:
       required: true
       schema:
         type: integer
+  /api/user/invitation/:
+    post:
+      operationId: users_invitation_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: ''
+      tags:
+      - Пользователи
+    delete:
+      operationId: users_invitation_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+          content:
+            application/json:
+             schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Приглашение удалено
+                    description: ''
+      tags:
+      - Пользователи
+    parameters:
+    - name: invite_code
+      description: 'Инвайт-код'
+      in: query
+      required: true
+      schema:
+        type: string
 components:
   schemas:
     ListInvite:
@@ -216,15 +219,13 @@ components:
           maxLength: 6
           minLength: 6
           example: "l413ds"
-        invitation:
+        followers:
           type: array
           items:
             "$ref": "#/components/schemas/ListInvite"
           readOnly: true
-  
-  securitySchemes:
-    Token:
-      description: 'Авторизация по токену. <br>
-      Все запросы от имени пользователя должны выполняться с заголовком "Authorization: Bearer TOKENVALUE"'
-      type: http
-      scheme: token
+        following:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ListInvite"
+          readOnly: true

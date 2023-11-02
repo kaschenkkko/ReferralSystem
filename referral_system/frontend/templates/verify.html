@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Верификация{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="col-md-7 col-9">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-floating">
+          {{  form.as_custom  }}
+          {% for message in messages %}
+            <ul class="errorlist">
+              <li>
+                {{ message }}
+              </li>
+            </ul>
+          {% endfor %}
+        </div>
+        <span>Введите ваш код - {{  code  }}</span>
+        <div class="my-3">
+          <button class="btn btn-secondary" type="submit">Отправить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %} 
