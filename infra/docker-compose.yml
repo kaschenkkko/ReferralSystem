@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: kaschenko/referral_system:v1.1
+    image: kaschenko/referral_system:v2.1
     restart: always
     volumes:
       - static_value:/app/static/

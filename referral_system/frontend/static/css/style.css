@@ -13,7 +13,7 @@
         display: none;
     }
 }
-a.contents {
+a.contents, a.spacing {
     display: inline-block;
 }
 a.spacing {
