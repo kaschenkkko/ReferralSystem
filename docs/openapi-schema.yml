@@ -6,7 +6,7 @@ info:
 paths:
   "/token":
     post:
-      summary: Login For Access Token
+      summary: Получение JWT токена
       operationId: login_for_access_token_token_post
       requestBody:
         content:
@@ -29,7 +29,7 @@ paths:
                 "$ref": "#/components/schemas/HTTPValidationError"
   "/users/":
     post:
-      summary: Register User
+      summary: Регистрация пользователей
       operationId: register_user_users__post
       requestBody:
         content:
