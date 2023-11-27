@@ -7,6 +7,7 @@ paths:
   "/token":
     post:
       summary: Получение JWT токена
+      description: Аутентификация пользователя, получение JWT-токена.
       operationId: login_for_access_token_token_post
       requestBody:
         content:
@@ -30,6 +31,7 @@ paths:
   "/users/":
     post:
       summary: Регистрация пользователей
+      description: Регистрация нового пользователя.
       operationId: register_user_users__post
       requestBody:
         content:
@@ -50,6 +52,51 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
+  "/dealers":
+    get:
+      summary: Список диллеров
+      description: Выводит объекты модели «MarketingDealer»
+      operationId: read_dealers_dealers_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  "$ref": "#/components/schemas/MarketingDealerModel"
+                type: array
+                title: Response Read Dealers Dealers Get
+  "/products":
+    get:
+      summary: Список товаров Просепт
+      description: Выводит объекты модели «MarketingProduct»
+      operationId: read_products_products_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  "$ref": "#/components/schemas/MarketingProductModel"
+                type: array
+                title: Response Read Products Products Get
+  "/dealerprice":
+    get:
+      summary: Список товаров от парсера
+      description: Выводит объекты модели «MarketingDealerPrice»
+      operationId: read_dealerprice_dealerprice_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  "$ref": "#/components/schemas/MarketingDealerPriceModel"
+                type: array
+                title: Response Read Dealerprice Dealerprice Get
 components:
   schemas:
     HTTPValidationError:
@@ -74,6 +121,131 @@ components:
       - username
       - password
       title: LoginRequest
+    MarketingDealerModel:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: MarketingDealerModel
+    MarketingDealerPriceModel:
+      properties:
+        id:
+          type: integer
+          title: Id
+        product_key:
+          type: string
+          title: Product Key
+        price:
+          type: number
+          title: Price
+        product_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Url
+        product_name:
+          type: string
+          title: Product Name
+        date:
+          type: string
+          format: date-time
+          title: Date
+        dealer_id:
+          type: integer
+          title: Dealer Id
+      type: object
+      required:
+      - id
+      - product_key
+      - price
+      - product_name
+      - date
+      - dealer_id
+      title: MarketingDealerPriceModel
+    MarketingProductModel:
+      properties:
+        id:
+          type: integer
+          title: Id
+        article:
+          type: integer
+          title: Article
+        ean_13:
+          type: string
+          title: Ean 13
+        cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cost
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        min_recommended_price:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Min Recommended Price
+        recommended_price:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Recommended Price
+        category_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category Id
+        ozon_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ozon Name
+        name_1c:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name 1C
+        wb_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wb Name
+        ozon_article:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ozon Article
+        wb_article:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wb Article
+        ym_article:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ym Article
+        wb_article_td:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wb Article Td
+      type: object
+      required:
+      - id
+      - article
+      - ean_13
+      title: MarketingProductModel
     Token:
       properties:
         access_token:
