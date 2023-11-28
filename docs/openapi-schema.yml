@@ -6,6 +6,8 @@ info:
 paths:
   "/token":
     post:
+      tags:
+      - Аутентификация
       summary: Получение JWT токена
       description: Аутентификация пользователя, получение JWT-токена.
       operationId: login_for_access_token_token_post
@@ -30,6 +32,8 @@ paths:
                 "$ref": "#/components/schemas/HTTPValidationError"
   "/users/":
     post:
+      tags:
+      - Аутентификация
       summary: Регистрация пользователей
       description: Регистрация нового пользователя.
       operationId: register_user_users__post
@@ -54,6 +58,8 @@ paths:
                 "$ref": "#/components/schemas/HTTPValidationError"
   "/dealers":
     get:
+      tags:
+      - Список всех объектов
       summary: Список диллеров
       description: Выводит объекты модели «MarketingDealer»
       operationId: read_dealers_dealers_get
@@ -69,6 +75,8 @@ paths:
                 title: Response Read Dealers Dealers Get
   "/products":
     get:
+      tags:
+      - Список всех объектов
       summary: Список товаров Просепт
       description: Выводит объекты модели «MarketingProduct»
       operationId: read_products_products_get
@@ -82,8 +90,43 @@ paths:
                   "$ref": "#/components/schemas/MarketingProductModel"
                 type: array
                 title: Response Read Products Products Get
+  "/products/{id}":
+    get:
+      tags:
+      - Получение объекта по ID
+      summary: Получение товара Просепт по ID
+      description: |-
+        Выводит объект модели «MarketingProduct» по ID
+
+        Данный запрос можно написать для всех моделей, но пока создал
+        только для одной модели.
+      operationId: product_by_id_products__id__get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          description: ID товара
+          title: Id
+        description: ID товара
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/MarketingProductModel"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
   "/dealerprice":
     get:
+      tags:
+      - Список всех объектов
       summary: Список товаров от парсера
       description: Выводит объекты модели «MarketingDealerPrice»
       operationId: read_dealerprice_dealerprice_get
@@ -97,6 +140,19 @@ paths:
                   "$ref": "#/components/schemas/MarketingDealerPriceModel"
                 type: array
                 title: Response Read Dealerprice Dealerprice Get
+  "/compare":
+    get:
+      summary: Сравнение товаров
+      description: |-
+        Преобразует объекты «MarketingDealerPrice» и «MarketingProduct»
+        в список словарей для передачи в функцию сравнения (matching).
+      operationId: compare_products_compare_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
 components:
   schemas:
     HTTPValidationError:
