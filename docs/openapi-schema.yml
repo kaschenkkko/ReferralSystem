@@ -140,19 +140,24 @@ paths:
                   "$ref": "#/components/schemas/MarketingDealerPriceModel"
                 type: array
                 title: Response Read Dealerprice Dealerprice Get
-  "/compare":
+  "/matching/product_dealer":
     get:
-      summary: Сравнение товаров
-      description: |-
-        Преобразует объекты «MarketingDealerPrice» и «MarketingProduct»
-        в список словарей для передачи в функцию сравнения (matching).
-      operationId: compare_products_compare_get
+      tags:
+      - Матчинг
+      summary: Список наиболее вероятных карточек производителя для каждой карточки
+        диллера
+      description: Выводит объекты модели «MatchingProductDealer»
+      operationId: compare_products_matching_product_dealer_get
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                items:
+                  "$ref": "#/components/schemas/MatchingProductDealerModel"
+                type: array
+                title: Response Compare Products Matching Product Dealer Get
 components:
   schemas:
     HTTPValidationError:
@@ -302,6 +307,30 @@ components:
       - article
       - ean_13
       title: MarketingProductModel
+    MatchingProductDealerModel:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: ID объекта в БД
+        dealerprice_id:
+          type: integer
+          title: Dealerprice Id
+          description: ID товара от дилера
+        product_ids:
+          items:
+            type: integer
+          type: array
+          maxItems: 5
+          minItems: 5
+          title: Product Ids
+          description: Список который содержит пять ID товаров от Просепт
+      type: object
+      required:
+      - id
+      - dealerprice_id
+      - product_ids
+      title: MatchingProductDealerModel
     Token:
       properties:
         access_token:
