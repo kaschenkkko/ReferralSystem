@@ -140,7 +140,7 @@ paths:
                   "$ref": "#/components/schemas/MarketingDealerPriceModel"
                 type: array
                 title: Response Read Dealerprice Dealerprice Get
-  "/matching/product_dealer":
+  "/matching_product_dealer":
     get:
       tags:
       - Матчинг
@@ -317,19 +317,19 @@ components:
           type: integer
           title: Dealerprice Id
           description: ID товара от дилера
-        product_ids:
+        products:
           items:
-            type: integer
+            "$ref": "#/components/schemas/MarketingProductModel"
           type: array
           maxItems: 5
           minItems: 5
-          title: Product Ids
-          description: Список который содержит пять ID товаров от Просепт
+          title: Products
+          description: Список который содержит пять товаров от Просепт
       type: object
       required:
       - id
       - dealerprice_id
-      - product_ids
+      - products
       title: MatchingProductDealerModel
     Token:
       properties:
