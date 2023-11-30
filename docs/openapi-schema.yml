@@ -56,13 +56,13 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
-  "/dealers":
+  "/dealerprice":
     get:
       tags:
-      - Список всех объектов
-      summary: Список диллеров
-      description: Выводит объекты модели «MarketingDealer»
-      operationId: read_dealers_dealers_get
+      - Карточки дилера
+      summary: Список всех карточек от дилера
+      description: Выводит объекты модели «MarketingDealerPrice»
+      operationId: read_dealerprice_dealerprice_get
       responses:
         '200':
           description: Successful Response
@@ -70,37 +70,16 @@ paths:
             application/json:
               schema:
                 items:
-                  "$ref": "#/components/schemas/MarketingDealerModel"
+                  "$ref": "#/components/schemas/MarketingDealerPriceModel"
                 type: array
-                title: Response Read Dealers Dealers Get
-  "/products":
+                title: Response Read Dealerprice Dealerprice Get
+  "/dealerprice/{id}":
     get:
       tags:
-      - Список всех объектов
-      summary: Список товаров Просепт
-      description: Выводит объекты модели «MarketingProduct»
-      operationId: read_products_products_get
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                items:
-                  "$ref": "#/components/schemas/MarketingProductModel"
-                type: array
-                title: Response Read Products Products Get
-  "/products/{id}":
-    get:
-      tags:
-      - Получение объекта по ID
-      summary: Получение товара Просепт по ID
-      description: |-
-        Выводит объект модели «MarketingProduct» по ID
-
-        Данный запрос можно написать для всех моделей, но пока создал
-        только для одной модели.
-      operationId: product_by_id_products__id__get
+      - Карточки дилера
+      summary: Получение карточки дилера по ID
+      description: Выводит карточку товара от дилера по ID
+      operationId: product_by_id_dealerprice__id__get
       parameters:
       - name: id
         in: path
@@ -116,37 +95,20 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/MarketingProductModel"
+                "$ref": "#/components/schemas/MarketingDealerPriceModel"
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
-  "/dealerprice":
-    get:
-      tags:
-      - Список всех объектов
-      summary: Список товаров от парсера
-      description: Выводит объекты модели «MarketingDealerPrice»
-      operationId: read_dealerprice_dealerprice_get
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                items:
-                  "$ref": "#/components/schemas/MarketingDealerPriceModel"
-                type: array
-                title: Response Read Dealerprice Dealerprice Get
   "/matching_product_dealer":
     get:
       tags:
       - Матчинг
       summary: Список наиболее вероятных карточек производителя для каждой карточки
         диллера
-      description: Выводит объекты модели «MatchingProductDealer»
+      description: Выводим объекты модели «MatchingProductDealer»
       operationId: compare_products_matching_product_dealer_get
       responses:
         '200':
@@ -182,19 +144,6 @@ components:
       - username
       - password
       title: LoginRequest
-    MarketingDealerModel:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - name
-      title: MarketingDealerModel
     MarketingDealerPriceModel:
       properties:
         id:
@@ -313,10 +262,10 @@ components:
           type: integer
           title: Id
           description: ID объекта в БД
-        dealerprice_id:
-          type: integer
-          title: Dealerprice Id
-          description: ID товара от дилера
+        dealerprice:
+          allOf:
+          - "$ref": "#/components/schemas/MarketingDealerPriceModel"
+          description: Карточка товара дилера
         products:
           items:
             "$ref": "#/components/schemas/MarketingProductModel"
@@ -328,7 +277,7 @@ components:
       type: object
       required:
       - id
-      - dealerprice_id
+      - dealerprice
       - products
       title: MatchingProductDealerModel
     Token:
