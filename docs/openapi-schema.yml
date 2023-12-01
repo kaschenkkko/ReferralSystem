@@ -56,13 +56,17 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
-  "/dealerprice":
+  "/dealer_products":
     get:
       tags:
       - Карточки дилера
       summary: Список всех карточек от дилера
-      description: Выводит объекты модели «MarketingDealerPrice»
-      operationId: read_dealerprice_dealerprice_get
+      description: |-
+        - Получаем все объекты модели «MarketingDealerPrice», по значениям
+          ID, из поля dealer_product_id модели «MatchingProductDealer».
+
+        - Получаем все карточки с товарами дилеров.
+      operationId: read_dealer_products_dealer_products_get
       responses:
         '200':
           description: Successful Response
@@ -70,46 +74,52 @@ paths:
             application/json:
               schema:
                 items:
-                  "$ref": "#/components/schemas/MarketingDealerPriceModel"
+                  "$ref": "#/components/schemas/DealerProductModel"
                 type: array
-                title: Response Read Dealerprice Dealerprice Get
-  "/dealerprice/{id}":
+                title: Response Read Dealer Products Dealer Products Get
+  "/dealer_products/{id}":
     get:
       tags:
       - Карточки дилера
-      summary: Получение карточки дилера по ID
-      description: Выводит карточку товара от дилера по ID
-      operationId: product_by_id_dealerprice__id__get
+      summary: Карточка дилера по ID
+      description: |-
+        - Получаем объект модели «MarketingDealerPrice» по значению ID,
+          из поля поля dealer_product_id модели «MatchingProductDealer».
+
+        - Получаем карточку дилера по ID.
+      operationId: dealer_products_by_id_dealer_products__id__get
       parameters:
       - name: id
         in: path
         required: true
         schema:
           type: integer
-          description: ID товара
+          description: ID объекта
           title: Id
-        description: ID товара
+        description: ID объекта
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/MarketingDealerPriceModel"
+                "$ref": "#/components/schemas/DealerProductModel"
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
-  "/matching_product_dealer":
+  "/matching":
     get:
       tags:
       - Матчинг
       summary: Список наиболее вероятных карточек производителя для каждой карточки
-        диллера
-      description: Выводим объекты модели «MatchingProductDealer»
-      operationId: compare_products_matching_product_dealer_get
+        дилера
+      description: |-
+        - Получаем все объекты модели «MatchingProductDealer».
+        - В каждом объекте одна карточка дилера и пять карточек товаров Просепт.
+      operationId: read_dealer_product_matching_get
       responses:
         '200':
           description: Successful Response
@@ -119,9 +129,103 @@ paths:
                 items:
                   "$ref": "#/components/schemas/MatchingProductDealerModel"
                 type: array
-                title: Response Compare Products Matching Product Dealer Get
+                title: Response Read Dealer Product Matching Get
+  "/matching/{dealer_product_id}":
+    delete:
+      tags:
+      - Матчинг
+      summary: Удалить карточку дилера
+      description: |-
+        - Удаляем объект модели «MatchingProductDealer», по значению
+          поля dealer_product_id.
+
+        - Удаляем карточку дилера и 5 связанных с ним карточек товаров Просепт.
+      operationId: delete_product_matching__dealer_product_id__delete
+      parameters:
+      - name: dealer_product_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          description: ID карточки дилера
+          title: Dealer Product Id
+        description: ID карточки дилера
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+    patch:
+      tags:
+      - Матчинг
+      summary: Перенести карточку дилера в конец списка
+      description: |-
+        - Меняем поле order в модели «MatchingProductDealer», что-бы при сортировке
+          по этому полю изменённый объект оказался в конце списка.
+
+        - Переносим выбранную карточку дилера в конец списка.
+      operationId: patch_product_matching__dealer_product_id__patch
+      parameters:
+      - name: dealer_product_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          description: ID карточки дилера
+          title: Dealer Product Id
+        description: ID карточки дилера
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
 components:
   schemas:
+    DealerProductModel:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: ID объекта в БД
+        dealer_name:
+          type: string
+          title: Dealer Name
+          description: Название дилера
+        product_name:
+          type: string
+          title: Product Name
+          description: Название товара
+        price:
+          type: number
+          title: Price
+          description: Цена
+        product_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Url
+          description: Ссылка на товар
+      type: object
+      required:
+      - id
+      - dealer_name
+      - product_name
+      - price
+      title: DealerProductModel
     HTTPValidationError:
       properties:
         detail:
@@ -144,41 +248,6 @@ components:
       - username
       - password
       title: LoginRequest
-    MarketingDealerPriceModel:
-      properties:
-        id:
-          type: integer
-          title: Id
-        product_key:
-          type: string
-          title: Product Key
-        price:
-          type: number
-          title: Price
-        product_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Url
-        product_name:
-          type: string
-          title: Product Name
-        date:
-          type: string
-          format: date-time
-          title: Date
-        dealer_id:
-          type: integer
-          title: Dealer Id
-      type: object
-      required:
-      - id
-      - product_key
-      - price
-      - product_name
-      - date
-      - dealer_id
-      title: MarketingDealerPriceModel
     MarketingProductModel:
       properties:
         id:
@@ -262,9 +331,9 @@ components:
           type: integer
           title: Id
           description: ID объекта в БД
-        dealerprice:
+        dealer_product:
           allOf:
-          - "$ref": "#/components/schemas/MarketingDealerPriceModel"
+          - "$ref": "#/components/schemas/DealerProductModel"
           description: Карточка товара дилера
         products:
           items:
@@ -277,7 +346,7 @@ components:
       type: object
       required:
       - id
-      - dealerprice
+      - dealer_product
       - products
       title: MatchingProductDealerModel
     Token:
