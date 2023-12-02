@@ -4,59 +4,7 @@ info:
   title: FastAPI Prosept Dealer
   version: 0.1.0
 paths:
-  "/token":
-    post:
-      tags:
-      - Аутентификация
-      summary: Получение JWT токена
-      description: Аутентификация пользователя, получение JWT-токена.
-      operationId: login_for_access_token_token_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/LoginRequest"
-        required: true
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/Token"
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/HTTPValidationError"
-  "/users/":
-    post:
-      tags:
-      - Аутентификация
-      summary: Регистрация пользователей
-      description: Регистрация нового пользователя.
-      operationId: register_user_users__post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/UserCreate"
-        required: true
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/User"
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/HTTPValidationError"
-  "/dealer_products":
+  "/api/v1/dealer_products":
     get:
       tags:
       - Карточки дилера
@@ -66,7 +14,7 @@ paths:
           ID, из поля dealer_product_id модели «MatchingProductDealer».
 
         - Получаем все карточки с товарами дилеров.
-      operationId: read_dealer_products_dealer_products_get
+      operationId: read_dealer_products_api_v1_dealer_products_get
       responses:
         '200':
           description: Successful Response
@@ -76,8 +24,8 @@ paths:
                 items:
                   "$ref": "#/components/schemas/DealerProductModel"
                 type: array
-                title: Response Read Dealer Products Dealer Products Get
-  "/dealer_products/{id}":
+                title: Response Read Dealer Products Api V1 Dealer Products Get
+  "/api/v1/dealer_products/{id}":
     get:
       tags:
       - Карточки дилера
@@ -87,7 +35,7 @@ paths:
           из поля поля dealer_product_id модели «MatchingProductDealer».
 
         - Получаем карточку дилера по ID.
-      operationId: dealer_products_by_id_dealer_products__id__get
+      operationId: dealer_products_by_id_api_v1_dealer_products__id__get
       parameters:
       - name: id
         in: path
@@ -110,7 +58,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
-  "/matching":
+  "/api/v1/matching":
     get:
       tags:
       - Матчинг
@@ -119,7 +67,7 @@ paths:
       description: |-
         - Получаем все объекты модели «MatchingProductDealer».
         - В каждом объекте одна карточка дилера и пять карточек товаров Просепт.
-      operationId: read_dealer_product_matching_get
+      operationId: read_dealer_product_api_v1_matching_get
       responses:
         '200':
           description: Successful Response
@@ -129,18 +77,18 @@ paths:
                 items:
                   "$ref": "#/components/schemas/MatchingProductDealerModel"
                 type: array
-                title: Response Read Dealer Product Matching Get
-  "/matching/{dealer_product_id}":
-    delete:
+                title: Response Read Dealer Product Api V1 Matching Get
+  "/api/v1/matching/{dealer_product_id}":
+    post:
       tags:
       - Матчинг
-      summary: Удалить карточку дилера
+      summary: Сохранение карточки после обработки оператором
       description: |-
-        - Удаляем объект модели «MatchingProductDealer», по значению
-          поля dealer_product_id.
-
-        - Удаляем карточку дилера и 5 связанных с ним карточек товаров Просепт.
-      operationId: delete_product_matching__dealer_product_id__delete
+        - Удаляем объект из модели «MatchingProductDealer», по значению
+          поля dealer_product_id. И создаем новую запись в
+          «MatchPositiveProductDealer» с карточкой Просепт, полученной
+          по значению prosept_id.
+      operationId: post_product_api_v1_matching__dealer_product_id__post
       parameters:
       - name: dealer_product_id
         in: path
@@ -150,6 +98,12 @@ paths:
           description: ID карточки дилера
           title: Dealer Product Id
         description: ID карточки дилера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProductData"
       responses:
         '200':
           description: Successful Response
@@ -171,7 +125,7 @@ paths:
           по этому полю изменённый объект оказался в конце списка.
 
         - Переносим выбранную карточку дилера в конец списка.
-      operationId: patch_product_matching__dealer_product_id__patch
+      operationId: patch_product_api_v1_matching__dealer_product_id__patch
       parameters:
       - name: dealer_product_id
         in: path
@@ -193,6 +147,51 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
+    delete:
+      tags:
+      - Матчинг
+      summary: Удалить карточку дилера
+      description: |-
+        - Удаляем объект модели «MatchingProductDealer», по значению
+          поля dealer_product_id.
+
+        - Удаляем карточку дилера и 5 связанных с ним карточек товаров Просепт.
+      operationId: delete_product_api_v1_matching__dealer_product_id__delete
+      parameters:
+      - name: dealer_product_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          description: ID карточки дилера
+          title: Dealer Product Id
+        description: ID карточки дилера
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/v1/statistics":
+    get:
+      tags:
+      - Статистика
+      summary: Статистика работы оператора
+      description: Собираем статистику по работе оператора.
+      operationId: get_statistics_api_v1_statistics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StatisticsData"
 components:
   schemas:
     DealerProductModel:
@@ -214,9 +213,7 @@ components:
           title: Price
           description: Цена
         product_url:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Product Url
           description: Ссылка на товар
       type: object
@@ -225,6 +222,7 @@ components:
       - dealer_name
       - product_name
       - price
+      - product_url
       title: DealerProductModel
     HTTPValidationError:
       properties:
@@ -235,96 +233,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    LoginRequest:
-      properties:
-        username:
-          type: string
-          title: Username
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-      - username
-      - password
-      title: LoginRequest
-    MarketingProductModel:
-      properties:
-        id:
-          type: integer
-          title: Id
-        article:
-          type: integer
-          title: Article
-        ean_13:
-          type: string
-          title: Ean 13
-        cost:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Cost
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        min_recommended_price:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Min Recommended Price
-        recommended_price:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Recommended Price
-        category_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Category Id
-        ozon_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ozon Name
-        name_1c:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name 1C
-        wb_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wb Name
-        ozon_article:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ozon Article
-        wb_article:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wb Article
-        ym_article:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ym Article
-        wb_article_td:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wb Article Td
-      type: object
-      required:
-      - id
-      - article
-      - ean_13
-      title: MarketingProductModel
     MatchingProductDealerModel:
       properties:
         id:
@@ -337,7 +245,7 @@ components:
           description: Карточка товара дилера
         products:
           items:
-            "$ref": "#/components/schemas/MarketingProductModel"
+            "$ref": "#/components/schemas/ProseptProductModel"
           type: array
           maxItems: 5
           minItems: 5
@@ -349,45 +257,71 @@ components:
       - dealer_product
       - products
       title: MatchingProductDealerModel
-    Token:
+    ProductData:
       properties:
-        access_token:
-          type: string
-          title: Access Token
-        token_type:
-          type: string
-          title: Token Type
+        prosept_id:
+          type: integer
+          title: Prosept Id
+          description: ID карточки товара от Просепт.
       type: object
       required:
-      - access_token
-      - token_type
-      title: Token
-    User:
+      - prosept_id
+      title: ProductData
+    ProseptProductModel:
       properties:
-        username:
-          type: string
-          title: Username
         id:
           type: integer
           title: Id
+          description: ID объекта в БД
+        article:
+          type: integer
+          title: Article
+          description: Артикул товара
+        cost:
+          type: number
+          title: Cost
+          description: Цена
+        name_1c:
+          type: string
+          title: Name 1C
+          description: Название товара
       type: object
       required:
-      - username
       - id
-      title: User
-    UserCreate:
+      - article
+      - cost
+      - name_1c
+      title: ProseptProductModel
+    StatisticsData:
       properties:
-        username:
-          type: string
-          title: Username
-        password:
-          type: string
-          title: Password
+        total_cards_checked:
+          type: integer
+          title: Total Cards Checked
+          description: Общее количество проверенных карточек
+        accepted_cards:
+          type: integer
+          title: Accepted Cards
+          description: Количество принятых карточек
+        delete_cards:
+          type: integer
+          title: Delete Cards
+          description: Количество неподходящих карточек
+        postponed_cards:
+          type: integer
+          title: Postponed Cards
+          description: Количество отложенных карточек
+        percentage_accepted_cards:
+          type: number
+          title: Percentage Accepted Cards
+          description: Процент принятых карточек
       type: object
       required:
-      - username
-      - password
-      title: UserCreate
+      - total_cards_checked
+      - accepted_cards
+      - delete_cards
+      - postponed_cards
+      - percentage_accepted_cards
+      title: StatisticsData
     ValidationError:
       properties:
         loc:
