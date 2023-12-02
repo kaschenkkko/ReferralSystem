@@ -4,60 +4,6 @@ info:
   title: FastAPI Prosept Dealer
   version: 0.1.0
 paths:
-  "/api/v1/dealer_products":
-    get:
-      tags:
-      - Карточки дилера
-      summary: Список всех карточек от дилера
-      description: |-
-        - Получаем все объекты модели «MarketingDealerPrice», по значениям
-          ID, из поля dealer_product_id модели «MatchingProductDealer».
-
-        - Получаем все карточки с товарами дилеров.
-      operationId: read_dealer_products_api_v1_dealer_products_get
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                items:
-                  "$ref": "#/components/schemas/DealerProductModel"
-                type: array
-                title: Response Read Dealer Products Api V1 Dealer Products Get
-  "/api/v1/dealer_products/{id}":
-    get:
-      tags:
-      - Карточки дилера
-      summary: Карточка дилера по ID
-      description: |-
-        - Получаем объект модели «MarketingDealerPrice» по значению ID,
-          из поля поля dealer_product_id модели «MatchingProductDealer».
-
-        - Получаем карточку дилера по ID.
-      operationId: dealer_products_by_id_api_v1_dealer_products__id__get
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          description: ID объекта
-          title: Id
-        description: ID объекта
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/DealerProductModel"
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/HTTPValidationError"
   "/api/v1/matching":
     get:
       tags:
@@ -105,11 +51,12 @@ paths:
             schema:
               "$ref": "#/components/schemas/ProductData"
       responses:
-        '200':
+        '201':
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                "$ref": "#/components/schemas/MatchPositiveProductDealerModel"
         '422':
           description: Validation Error
           content:
@@ -153,7 +100,8 @@ paths:
       summary: Удалить карточку дилера
       description: |-
         - Удаляем объект модели «MatchingProductDealer», по значению
-          поля dealer_product_id.
+          поля dealer_product_id. И создаем новую запись в
+          «DelMatchingProductDealer».
 
         - Удаляем карточку дилера и 5 связанных с ним карточек товаров Просепт.
       operationId: delete_product_api_v1_matching__dealer_product_id__delete
@@ -167,11 +115,8 @@ paths:
           title: Dealer Product Id
         description: ID карточки дилера
       responses:
-        '200':
+        '204':
           description: Successful Response
-          content:
-            application/json:
-              schema: {}
         '422':
           description: Validation Error
           content:
@@ -233,6 +178,26 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    MatchPositiveProductDealerModel:
+      properties:
+        id:
+          type: integer
+          title: Id
+          description: ID объекта в БД
+        dealer_product_id:
+          type: integer
+          title: Dealer Product Id
+          description: ID карточки дилера
+        product_id:
+          type: integer
+          title: Product Id
+          description: ID товара Просепт
+      type: object
+      required:
+      - id
+      - dealer_product_id
+      - product_id
+      title: MatchPositiveProductDealerModel
     MatchingProductDealerModel:
       properties:
         id:
