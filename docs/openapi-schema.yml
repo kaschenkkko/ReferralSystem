@@ -184,19 +184,19 @@ components:
           type: integer
           title: Id
           description: ID объекта в БД
-        dealer_product_id:
-          type: integer
-          title: Dealer Product Id
-          description: ID карточки дилера
-        product_id:
-          type: integer
-          title: Product Id
-          description: ID товара Просепт
+        dealer_product:
+          allOf:
+          - "$ref": "#/components/schemas/DealerProductModel"
+          description: Карточка товара дилера
+        prosept_product:
+          allOf:
+          - "$ref": "#/components/schemas/ProseptProductModel"
+          description: Карточка товара Просепт
       type: object
       required:
       - id
-      - dealer_product_id
-      - product_id
+      - dealer_product
+      - prosept_product
       title: MatchPositiveProductDealerModel
     MatchingProductDealerModel:
       properties:
