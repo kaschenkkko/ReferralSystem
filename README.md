@@ -6,11 +6,8 @@
   <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
 </div>
 
-# Проект доступен по адресу
-[kaschenko.pythonanywhere.com](https://kaschenko.pythonanywhere.com/)
-
-# Документация API
-[kaschenko.pythonanywhere.com/api/docs](https://kaschenko.pythonanywhere.com/api/docs/)
+# Документация API:
+Referral System - **[API redoc](https://clownvkkaschenko.github.io/ReferralSystem/)**
 
 # Описание проекта:
 - Авторизация по номеру телефона. Первый запрос на ввод номера
