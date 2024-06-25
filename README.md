@@ -7,7 +7,7 @@
 </div>
 
 # Документация API:
-Referral System - **[API redoc](https://clownvkkaschenko.github.io/ReferralSystem/)**
+Referral System - **[API redoc](https://kaschenkkko.github.io/ReferralSystem/)**
 
 # Описание проекта:
 - Авторизация по номеру телефона. Первый запрос на ввод номера
